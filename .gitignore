@@ -1,0 +1,46 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Environment variables
+.env
+.env.* 
+
+# Node modules
+**/node_modules/
+
+# Vercel and deployment
+.vercel
+.vercelignore
+
+# Dist / build folders
+**/dist/
+**/build/
+
+# IDE settings
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Cache
+.cache/
+.next/
+out/
+
+# Optional: lock files (if you're not using npm/yarn lock enforcement)
+# package-lock.json
+# yarn.lock
