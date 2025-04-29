@@ -21,8 +21,8 @@ const CreateExpense = () => {
     });
     const [loading, setLoading] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
-    const dispatch=useDispatch();
-    const {expense}=useSelector(store=>store.expense);
+    const dispatch = useDispatch();
+    const { expense } = useSelector(store => store.expense);
 
     const changeEventHandler = (e) => {
         const { name, value } = e.target;
@@ -42,13 +42,11 @@ const CreateExpense = () => {
     const submitHandler = async (e) => {
         e.preventDefault();
 
-        // Validate required fields
         if (!formData.description || !formData.amount || !formData.category) {
             toast.error("Please fill out all fields.");
             return;
         }
 
-        // Validate numeric amount
         if (isNaN(Number(formData.amount)) || Number(formData.amount) <= 0) {
             toast.error("Amount must be a valid positive number.");
             return;
@@ -68,7 +66,7 @@ const CreateExpense = () => {
             );
 
             if (res.data.success) {
-                dispatch(setExpenses([...expense,res.data.expense]));
+                dispatch(setExpenses([...expense, res.data.expense]));
                 toast.success(res.data.message);
                 setIsOpen(false);
                 setFormData({

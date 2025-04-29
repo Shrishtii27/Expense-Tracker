@@ -1,3 +1,4 @@
+// ExpenseTable.jsx
 import {
     Table,
     TableBody,
@@ -16,44 +17,37 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "sonner";
 import UpdateExpense from "./UpdateExpense";
+import { format } from "date-fns";
 
+// Removed Vercel base URL
+const API_BASE_URL = "/api/v1/expense";
 
 const ExpenseTable = () => {
     const { expense } = useSelector(store => store.expense);
     const [localExpense, setLocalExpense] = useState([]);
     const [checkedItems, setCheckedItems] = useState({});
 
-    // Effect to update the localExpense whenever the expense from redux changes
     useEffect(() => {
         setLocalExpense(expense);
     }, [expense]);
 
-    // Calculate the total amount, excluding checked items
     const totalAmount = localExpense.reduce((acc, expense) => {
         if (!checkedItems[expense._id]) {
-            return acc + expense.amount;
+            return acc + Number(expense.amount);
         }
         return acc;
     }, 0);
 
- 
-
-    // Handle checkbox change to mark expense as done
     const handleCheckboxChange = async (expenseId) => {
         const newStatus = !checkedItems[expenseId];
         try {
-            const res = await axios.put(`http://localhost:8000/api/v1/expense/${expenseId}/done`, { done: newStatus }, {
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+            const res = await axios.put(`${API_BASE_URL}/${expenseId}/done`, { done: newStatus }, {
+                headers: { 'Content-Type': 'application/json' },
                 withCredentials: true
             });
             if (res.data.success) {
                 toast.success(res.data.message);
-                setCheckedItems(prevData => ({
-                    ...prevData,
-                    [expenseId]: newStatus
-                }));
+                setCheckedItems(prevData => ({ ...prevData, [expenseId]: newStatus }));
                 setLocalExpense(localExpense.map(exp => exp._id === expenseId ? { ...exp, done: newStatus } : exp));
             }
         } catch (error) {
@@ -61,10 +55,9 @@ const ExpenseTable = () => {
         }
     };
 
-    // Remove expense handler
     const removeExpenseHandler = async (expenseId) => {
         try {
-            const res = await axios.delete(`http://localhost:8000/api/v1/expense/remove/${expenseId}`);
+            const res = await axios.delete(`${API_BASE_URL}/remove/${expenseId}`);
             if (res.data.success) {
                 toast.success(res.data.message);
                 setLocalExpense(localExpense.filter(expense => expense._id !== expenseId));
@@ -76,7 +69,6 @@ const ExpenseTable = () => {
 
     return (
         <div>
-            
             <Table>
                 <TableCaption>A list of your recent expenses.</TableCaption>
                 <TableHeader>
@@ -91,7 +83,11 @@ const ExpenseTable = () => {
                 </TableHeader>
                 <TableBody>
                     {localExpense.length === 0 ? (
-                        <span>Add Your first Expense</span>
+                        <TableRow>
+                            <TableCell colSpan={6} className="text-center text-muted-foreground">
+                                Add your first Expense
+                            </TableCell>
+                        </TableRow>
                     ) : (
                         localExpense.map((expense) => (
                             <TableRow key={expense._id}>
@@ -104,10 +100,17 @@ const ExpenseTable = () => {
                                 <TableCell className={expense.done ? 'line-through' : ''}>{expense.description}</TableCell>
                                 <TableCell className={expense.done ? 'line-through' : ''}>{expense.amount}</TableCell>
                                 <TableCell className={expense.done ? 'line-through' : ''}>{expense.category}</TableCell>
-                                <TableCell className={expense.done ? 'line-through' : ''}>{expense.createdAt?.split("T")[0]}</TableCell>
+                                <TableCell className={expense.done ? 'line-through' : ''}>
+                                    {format(new Date(expense.createdAt), "dd MMM yyyy")}
+                                </TableCell>
                                 <TableCell className="text-right">
                                     <div className="flex items-center justify-end gap-2">
-                                        <Button onClick={() => removeExpenseHandler(expense._id)} size="icon" className="rounded-full border text-red-600 border-red-600 hover:border-transparent" variant="outline">
+                                        <Button
+                                            onClick={() => removeExpenseHandler(expense._id)}
+                                            size="icon"
+                                            className="rounded-full border text-red-600 border-red-600 hover:border-transparent"
+                                            variant="outline"
+                                        >
                                             <Trash className="h-4 w-4" />
                                         </Button>
                                         <UpdateExpense expense={expense} />

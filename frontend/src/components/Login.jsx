@@ -1,3 +1,4 @@
+// Login.jsx
 import React, { useState } from "react";
 import Logo from "./shared/logo";
 import { Button } from "./ui/button";
@@ -8,57 +9,46 @@ import { useDispatch } from "react-redux";
 import { setAuthUser } from "@/redux/authSlice";
 
 const Login = () => {
-  const [input, setInput] = useState({
-    email: "",
-    password: "",
-  });
-  const [loading, setLoading] = useState(false); // State to handle button loading
+  const [input, setInput] = useState({ email: "", password: "" });
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  // Handle input change
   const changeHandler = (e) => {
     setInput({ ...input, [e.target.name]: e.target.value });
   };
 
-  // Handle form submission
   const submitHandler = async (e) => {
     e.preventDefault();
-    setLoading(true); // Start loading state
-
+    setLoading(true);
     try {
       const res = await axios.post(
         "http://localhost:8000/api/v1/user/login",
         input,
         {
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           withCredentials: true,
         }
       );
-
-      // Assuming API response has `data.success` and `data.message`
       if (res.data.success) {
-        dispatch(setAuthUser(res.data.user))
+        dispatch(setAuthUser(res.data.user));
         toast.success(res.data.message || "Login successful!");
-        navigate("/"); // Redirect to home or dashboard
+        navigate("/");
       } else {
         toast.error(res.data.message || "Login failed. Please try again.");
       }
     } catch (error) {
-      console.error(error);
       toast.error(
         error.response?.data?.message || "An error occurred. Please try again."
       );
     } finally {
-      setLoading(false); // Stop loading state
+      setLoading(false);
     }
   };
 
   return (
     <div className="flex items-center justify-center w-screen h-screen bg-gray-100">
-      <Toaster /> {/* Toast notification container */}
+      <Toaster />
       <form
         onSubmit={submitHandler}
         className="bg-white w-96 p-8 shadow-lg rounded-lg"
@@ -97,14 +87,14 @@ const Login = () => {
         <Button
           type="submit"
           className={`w-full py-2 my-5 text-white bg-blue-600 rounded-md hover:bg-blue-700 ${
-            loading && "opacity-50 cursor-not-allowed"
+            loading ? "opacity-50 cursor-not-allowed" : ""
           }`}
-          disabled={loading} // Disable button while loading
+          disabled={loading}
         >
           {loading ? "Logging in..." : "Login"}
         </Button>
         <p className="text-sm text-center">
-          Don't have an account?{" "}
+          Don&apos;t have an account?{" "}
           <Link to="/signup" className="text-blue-600">
             Signup
           </Link>

@@ -1,3 +1,4 @@
+// Navbar.jsx
 import React from "react";
 import axios from "axios";
 import Logo from "./shared/logo";
@@ -7,10 +8,9 @@ import { Button } from "./ui/button";
 import { Avatar, AvatarImage } from "./ui/avatar";
 import { toast } from "sonner";
 import { useSelector } from "react-redux";
-import store from "@/redux/store";
 
 const Navbar = () => {
-  const { user } = useSelector(store => store.auth)
+  const { user } = useSelector((state) => state.auth);
   const navigate = useNavigate();
 
   const logoutHandler = async () => {
@@ -18,7 +18,6 @@ const Navbar = () => {
       const res = await axios.get("http://localhost:8000/api/v1/user/logout", {
         withCredentials: true,
       });
-
       if (res.data.success) {
         toast.success(res.data.message || "Logout successful!");
         navigate("/login");
@@ -26,7 +25,6 @@ const Navbar = () => {
         toast.error(res.data.message || "Logout failed. Please try again.");
       }
     } catch (error) {
-      console.error(error);
       toast.error(
         error.response?.data?.message || "An error occurred while logging out."
       );
