@@ -1,6 +1,6 @@
 import React from "react";
 import axios from "axios";
-import Logo from "./shared/logo";
+import Logo from "./shared/Logo";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
