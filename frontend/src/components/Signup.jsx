@@ -25,7 +25,7 @@ const Signup = () => {
     setLoading(true); // Start loading
     try {
       const res = await axios.post(
-        "http://localhost:8000/api/v1/user/register",
+        `${process.env.VERCEL_HREF}/api/v1/user/register`,
         input,
         {
           headers: {
