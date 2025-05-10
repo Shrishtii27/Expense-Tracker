@@ -13,7 +13,7 @@ const useGetExpenses = () => {
             try {
                 axios.defaults.withCredentials = true;
 
-                const res = await axios.get(`${process.env.VERCEL_HREF}/api/v1/expense/getall?category=${category}&done=${markAsDone}`);
+                const res = await axios.get(`${process.env.VERCEL}/api/v1/expense/getall?category=${category}&done=${markAsDone}`);
 
                 if (res.data.success) {
                     dispatch(setExpenses(res.data.expenses));

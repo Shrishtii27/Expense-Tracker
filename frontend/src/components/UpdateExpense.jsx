@@ -38,7 +38,7 @@ const UpdateExpense = ({ expense: expenseProp }) => {
             console.log("FormData being sent to API:", formData);
             console.log("Expense ID:", expenseProp._id);
             const res = await axios.put(
-                `${process.env.VERCEL_HREF}/api/v1/expense/update/${expenseProp._id}`,
+                `${process.env.VERCEL}/api/v1/expense/update/${expenseProp._id}`,
                 formData,
                 {
                     headers: {

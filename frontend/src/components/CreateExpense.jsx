@@ -57,7 +57,7 @@ const CreateExpense = () => {
         try {
             setLoading(true);
             const res = await axios.post(
-                `${process.env.VERCEL_HREF}/api/v1/expense/add`,
+                `${process.env.VERCEL}/api/v1/expense/add`,
                 formData,
                 {
                     headers: {

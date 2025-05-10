@@ -42,7 +42,7 @@ const ExpenseTable = () => {
     const handleCheckboxChange = async (expenseId) => {
         const newStatus = !checkedItems[expenseId];
         try {
-            const res = await axios.put(`${process.env.VERCEL_HREF}/api/v1/expense/${expenseId}/done`, { done: newStatus }, {
+            const res = await axios.put(`${process.env.VERCEL}/api/v1/expense/${expenseId}/done`, { done: newStatus }, {
                 headers: {
                     'Content-Type': 'application/json'
                 },

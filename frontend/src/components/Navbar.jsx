@@ -15,7 +15,7 @@ const Navbar = () => {
 
   const logoutHandler = async () => {
     try {
-      const res = await axios.get(`${process.env.VERCEL_HREF}/api/v1/user/logout`, {
+      const res = await axios.get(`${process.env.VERCEL}/api/v1/user/logout`, {
         withCredentials: true,
       });
 

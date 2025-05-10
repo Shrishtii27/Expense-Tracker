@@ -28,7 +28,7 @@ const Login = () => {
 
     try {
       const res = await axios.post(
-        `${process.env.VERCEL_HREF}/api/v1/user/login`,
+        `${process.env.VERCEL}/api/v1/user/login`,
         input,
         {
           headers: {
