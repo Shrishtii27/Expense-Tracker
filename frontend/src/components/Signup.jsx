@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Logo from "./shared/logo";
+import Logo from "./shared/Logo";
 import { Button } from "./ui/button";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
