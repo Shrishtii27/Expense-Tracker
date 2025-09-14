@@ -16,69 +16,67 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "sonner";
 import UpdateExpense from "./UpdateExpense";
-import emptyImg from "@/assets/empty-expenses.svg"; // add an illustration in assets
+import emptyImg from "@/assets/empty-expenses.svg";
 
 const ExpenseTable = () => {
   const { expense } = useSelector((store) => store.expense);
+  const { user } = useSelector((store) => store.auth);
   const [localExpense, setLocalExpense] = useState([]);
-  const [checkedItems, setCheckedItems] = useState({});
 
-  // update localExpense whenever redux expense changes
   useEffect(() => {
     setLocalExpense(expense);
   }, [expense]);
 
-  // calculate total excluding marked as done
-  const totalAmount = localExpense.reduce((acc, exp) => {
-    if (!checkedItems[exp._id]) {
-      return acc + exp.amount;
-    }
-    return acc;
-  }, 0);
+  const totalAmount = localExpense.reduce((acc, exp) => acc + (exp.done ? 0 : exp.amount), 0);
 
-  // toggle done status
   const handleCheckboxChange = async (expenseId) => {
-    const newStatus = !checkedItems[expenseId];
     try {
+      const exp = localExpense.find((e) => e._id === expenseId);
+      const newStatus = !exp.done;
+
       const res = await axios.put(
-        `${process.env.VERCEL}/api/v1/expense/${expenseId}/done`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/expense/${expenseId}/done`,
         { done: newStatus },
         {
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user?.token}`,
+          },
           withCredentials: true,
         }
       );
+
       if (res.data.success) {
-        toast.success(res.data.message);
-        setCheckedItems((prev) => ({
-          ...prev,
-          [expenseId]: newStatus,
-        }));
+        toast.success(res.data.message || "Status updated!");
         setLocalExpense((prev) =>
-          prev.map((exp) =>
-            exp._id === expenseId ? { ...exp, done: newStatus } : exp
-          )
+          prev.map((e) => (e._id === expenseId ? { ...e, done: newStatus } : e))
         );
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
+      toast.error("Failed to update status.");
     }
   };
 
-  // remove expense
   const removeExpenseHandler = async (expenseId) => {
     try {
       const res = await axios.delete(
-        `http://localhost:8000/api/v1/expense/remove/${expenseId}`
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/expense/remove/${expenseId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${user?.token}`,
+          },
+          withCredentials: true,
+        }
       );
+
       if (res.data.success) {
-        toast.success(res.data.message);
-        setLocalExpense((prev) =>
-          prev.filter((exp) => exp._id !== expenseId)
-        );
+        toast.success(res.data.message || "Expense removed!");
+        setLocalExpense((prev) => prev.filter((e) => e._id !== expenseId));
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
+      toast.error("Failed to remove expense.");
     }
   };
 
@@ -93,9 +91,7 @@ const ExpenseTable = () => {
 
         <TableHeader>
           <TableRow className="bg-gray-100 dark:bg-gray-800">
-            <TableHead className="w-[150px] font-semibold">
-              Mark As Done
-            </TableHead>
+            <TableHead className="w-[150px] font-semibold">Mark As Done</TableHead>
             <TableHead className="font-semibold">Description</TableHead>
             <TableHead className="font-semibold text-right">Amount</TableHead>
             <TableHead className="font-semibold">Category</TableHead>
@@ -109,11 +105,7 @@ const ExpenseTable = () => {
             <TableRow>
               <TableCell colSpan={6}>
                 <div className="flex flex-col items-center justify-center py-12 text-center">
-                  <img
-                    src={emptyImg}
-                    alt="Empty expenses"
-                    className="w-40 h-40 mb-4 opacity-80"
-                  />
+                  <img src={emptyImg} alt="Empty expenses" className="w-40 h-40 mb-4 opacity-80" />
                   <p className="text-gray-500 dark:text-gray-400">
                     You haven’t added any expenses yet.
                   </p>
@@ -127,26 +119,17 @@ const ExpenseTable = () => {
                 className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
               >
                 <TableCell>
-                  <Checkbox
-                    checked={exp.done}
-                    onCheckedChange={() => handleCheckboxChange(exp._id)}
-                  />
+                  <Checkbox checked={exp.done} onCheckedChange={() => handleCheckboxChange(exp._id)} />
                 </TableCell>
-                <TableCell className={exp.done ? "line-through text-gray-400" : ""}>
-                  {exp.description}
-                </TableCell>
+                <TableCell className={exp.done ? "line-through text-gray-400" : ""}>{exp.description}</TableCell>
                 <TableCell
                   className={`text-right font-semibold ${
-                    exp.done
-                      ? "line-through text-gray-400"
-                      : "text-green-600 dark:text-green-400"
+                    exp.done ? "line-through text-gray-400" : "text-green-600 dark:text-green-400"
                   }`}
                 >
                   ₹{exp.amount}
                 </TableCell>
-                <TableCell className={exp.done ? "line-through text-gray-400" : ""}>
-                  {exp.category}
-                </TableCell>
+                <TableCell className={exp.done ? "line-through text-gray-400" : ""}>{exp.category}</TableCell>
                 <TableCell className={exp.done ? "line-through text-gray-400" : ""}>
                   {exp.createdAt?.split("T")[0]}
                 </TableCell>

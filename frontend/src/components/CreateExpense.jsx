@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
 import {
-    Dialog, DialogContent, DialogDescription, DialogFooter,
-    DialogHeader, DialogTitle, DialogTrigger
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger
 } from './ui/dialog';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
@@ -24,23 +29,19 @@ const CreateExpense = () => {
 
     const dispatch = useDispatch();
     const { expense } = useSelector(store => store.expense);
-    const { user } = useSelector(store => store.auth); // ✅ get token from auth slice
+    const { user } = useSelector(store => store.auth);
 
+    // Handle input changes
     const changeEventHandler = (e) => {
         const { name, value } = e.target;
-        setFormData((prevData) => ({
-            ...prevData,
-            [name]: value
-        }));
+        setFormData(prevData => ({ ...prevData, [name]: value }));
     };
 
     const changeCategoryHandler = (value) => {
-        setFormData((prevData) => ({
-            ...prevData,
-            category: value
-        }));
+        setFormData(prevData => ({ ...prevData, category: value }));
     };
 
+    // Submit new expense
     const submitHandler = async (e) => {
         e.preventDefault();
 
@@ -57,12 +58,12 @@ const CreateExpense = () => {
         try {
             setLoading(true);
             const res = await axios.post(
-                `${import.meta.env.VITE_BACKEND_URL}/api/v1/expense/add`, // ✅ use proper env
+                `${import.meta.env.VITE_BACKEND_URL}/api/v1/expense/add`,
                 formData,
                 {
                     headers: {
                         'Content-Type': 'application/json',
-                        Authorization: `Bearer ${user?.token}`, // ✅ send token
+                        Authorization: `Bearer ${user?.token}`,
                     },
                     withCredentials: true,
                 }
@@ -70,16 +71,15 @@ const CreateExpense = () => {
 
             if (res.data.success) {
                 dispatch(setExpenses([...expense, res.data.expense]));
-                toast.success(res.data.message);
-                setIsOpen(false);
+                toast.success(res.data.message || "Expense added successfully!");
                 setFormData({ description: "", amount: "", category: "" });
+                setIsOpen(false);
             } else {
                 toast.error(res.data.message || "Failed to add expense.");
             }
         } catch (error) {
-            const message =
-                error.response?.data?.message || "An error occurred while adding the expense.";
             console.error(error);
+            const message = error.response?.data?.message || "An error occurred while adding the expense.";
             toast.error(message);
         } finally {
             setLoading(false);
@@ -93,6 +93,7 @@ const CreateExpense = () => {
                     Add new Expense
                 </Button>
             </DialogTrigger>
+
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
                     <DialogTitle>Add Expense</DialogTitle>
@@ -100,12 +101,11 @@ const CreateExpense = () => {
                         Create Expense here. Click "Add" when you're done.
                     </DialogDescription>
                 </DialogHeader>
+
                 <form onSubmit={submitHandler}>
                     <div className="grid gap-4 py-4">
                         <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="description" className="text-right">
-                                Description
-                            </Label>
+                            <Label htmlFor="description" className="text-right">Description</Label>
                             <Input
                                 id="description"
                                 placeholder="Description"
@@ -115,10 +115,9 @@ const CreateExpense = () => {
                                 onChange={changeEventHandler}
                             />
                         </div>
+
                         <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="amount" className="text-right">
-                                Amount
-                            </Label>
+                            <Label htmlFor="amount" className="text-right">Amount</Label>
                             <Input
                                 id="amount"
                                 placeholder="Amount in ₹"
@@ -128,6 +127,7 @@ const CreateExpense = () => {
                                 onChange={changeEventHandler}
                             />
                         </div>
+
                         <Select value={formData.category} onValueChange={changeCategoryHandler}>
                             <SelectTrigger className="w-[180px]">
                                 <SelectValue placeholder="Select Category" />
@@ -143,6 +143,7 @@ const CreateExpense = () => {
                             </SelectContent>
                         </Select>
                     </div>
+
                     <DialogFooter>
                         <Button
                             type="submit"
@@ -153,9 +154,7 @@ const CreateExpense = () => {
                                 <>
                                     <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Loading...
                                 </>
-                            ) : (
-                                "Add"
-                            )}
+                            ) : "Add"}
                         </Button>
                     </DialogFooter>
                 </form>

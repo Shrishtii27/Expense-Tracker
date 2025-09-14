@@ -27,11 +27,9 @@ const Signup = () => {
   const [passwordStrength, setPasswordStrength] = useState(0);
   const navigate = useNavigate();
 
-  // Handle input change
   const changeHandler = (e) => {
     setInput({ ...input, [e.target.name]: e.target.value });
 
-    // Password strength check
     if (e.target.name === "password") {
       const password = e.target.value;
       let strength = 0;
@@ -44,18 +42,15 @@ const Signup = () => {
     }
   };
 
-  // Handle form submission
   const submitHandler = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
       const res = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/v1/user/register`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/user/register`,
         input,
         {
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           withCredentials: true,
         }
       );
@@ -76,7 +71,6 @@ const Signup = () => {
     }
   };
 
-  // Password strength indicator
   const getPasswordStrengthColor = () => {
     if (passwordStrength <= 2) return "bg-red-500";
     if (passwordStrength <= 3) return "bg-yellow-500";
@@ -96,19 +90,15 @@ const Signup = () => {
       className="min-h-screen flex items-center justify-center bg-cover bg-center bg-fixed relative overflow-hidden py-8"
       style={{ backgroundImage: `url(${Loginpage})` }}
     >
-      {/* Background Overlay */}
       <div className="absolute inset-0 bg-gradient-to-br from-gray-900/70 via-slate-900/60 to-gray-800/70 backdrop-blur-sm"></div>
 
-      {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-r from-emerald-500/10 to-teal-500/10 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
       </div>
 
-      {/* Main Container */}
       <div className="relative z-10 w-full max-w-md mx-4">
         <div className="bg-white/10 dark:bg-gray-900/20 backdrop-blur-2xl rounded-3xl border border-white/20 shadow-2xl p-8 transition-all duration-500 hover:shadow-3xl hover:bg-white/15">
-          {/* CASHLY Branding */}
           <div className="text-center mb-8">
             <div className="flex justify-center items-center mb-4">
               <div className="relative">
@@ -133,14 +123,9 @@ const Signup = () => {
             </p>
           </div>
 
-          {/* Signup Form */}
           <form onSubmit={submitHandler} className="space-y-6">
-            {/* Full Name Field */}
             <div className="space-y-2">
-              <label
-                htmlFor="fullname"
-                className="block text-sm font-semibold text-white/90"
-              >
+              <label htmlFor="fullname" className="block text-sm font-semibold text-white/90">
                 Full Name
               </label>
               <div className="relative group">
@@ -158,12 +143,8 @@ const Signup = () => {
               </div>
             </div>
 
-            {/* Email Field */}
             <div className="space-y-2">
-              <label
-                htmlFor="email"
-                className="block text-sm font-semibold text-white/90"
-              >
+              <label htmlFor="email" className="block text-sm font-semibold text-white/90">
                 Email Address
               </label>
               <div className="relative group">
@@ -181,12 +162,8 @@ const Signup = () => {
               </div>
             </div>
 
-            {/* Password Field */}
             <div className="space-y-2">
-              <label
-                htmlFor="password"
-                className="block text-sm font-semibold text-white/90"
-              >
+              <label htmlFor="password" className="block text-sm font-semibold text-white/90">
                 Password
               </label>
               <div className="relative group">
@@ -206,32 +183,23 @@ const Signup = () => {
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white/50 hover:text-white transition-colors duration-300"
                 >
-                  {showPassword ? (
-                    <EyeOff className="w-5 h-5" />
-                  ) : (
-                    <Eye className="w-5 h-5" />
-                  )}
+                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
               </div>
 
-              {/* Password Strength Indicator */}
               {input.password && (
                 <div className="mt-2">
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs text-white/70">
-                      Password Strength
-                    </span>
-                    <span
-                      className={`text-xs font-medium ${
-                        passwordStrength <= 2
-                          ? "text-red-400"
-                          : passwordStrength <= 3
-                          ? "text-yellow-400"
-                          : passwordStrength <= 4
-                          ? "text-blue-400"
-                          : "text-green-400"
-                      }`}
-                    >
+                    <span className="text-xs text-white/70">Password Strength</span>
+                    <span className={`text-xs font-medium ${
+                      passwordStrength <= 2
+                        ? "text-red-400"
+                        : passwordStrength <= 3
+                        ? "text-yellow-400"
+                        : passwordStrength <= 4
+                        ? "text-blue-400"
+                        : "text-green-400"
+                    }`}>
                       {getPasswordStrengthText()}
                     </span>
                   </div>
@@ -245,28 +213,16 @@ const Signup = () => {
               )}
             </div>
 
-            {/* Terms and Conditions */}
             <div className="flex items-start space-x-3 p-4 bg-white/5 rounded-xl border border-white/10">
               <CheckCircle className="w-5 h-5 text-emerald-400 mt-0.5 flex-shrink-0" />
               <p className="text-xs text-white/80 leading-relaxed">
                 By creating an account, you agree to our{" "}
-                <Link
-                  to="/terms"
-                  className="text-emerald-400 hover:text-emerald-300 underline"
-                >
-                  Terms of Service
-                </Link>{" "}
+                <Link to="/terms" className="text-emerald-400 hover:text-emerald-300 underline">Terms of Service</Link>{" "}
                 and{" "}
-                <Link
-                  to="/privacy"
-                  className="text-emerald-400 hover:text-emerald-300 underline"
-                >
-                  Privacy Policy
-                </Link>
+                <Link to="/privacy" className="text-emerald-400 hover:text-emerald-300 underline">Privacy Policy</Link>
               </p>
             </div>
 
-            {/* Signup Button */}
             <Button
               type="submit"
               disabled={loading}
@@ -288,28 +244,22 @@ const Signup = () => {
             </Button>
           </form>
 
-          {/* Divider */}
           <div className="flex items-center my-8">
             <div className="flex-1 border-t border-white/20"></div>
             <span className="px-4 text-white/60 text-sm font-medium">or</span>
             <div className="flex-1 border-t border-white/20"></div>
           </div>
 
-          {/* Sign In Link */}
           <div className="text-center">
             <p className="text-white/80 text-sm">
               Already have an account?{" "}
-              <Link
-                to="/login"
-                className="font-bold text-emerald-400 hover:text-emerald-300 hover:underline transition-colors duration-300"
-              >
+              <Link to="/login" className="font-bold text-emerald-400 hover:text-emerald-300 hover:underline transition-colors duration-300">
                 Sign in here
               </Link>
             </p>
           </div>
         </div>
 
-        {/* Additional Info */}
         <div className="text-center mt-8 text-white/60 text-sm space-y-2">
           <p>🔐 Your data is secured with end-to-end encryption</p>
           <p>✨ Join thousands of users managing their finances smartly</p>

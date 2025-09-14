@@ -10,10 +10,7 @@ import Loginpage from "/src/assets/Loginpage.jpg";
 import "./style.css";
 
 const Login = () => {
-  const [input, setInput] = useState({
-    email: "",
-    password: "",
-  });
+  const [input, setInput] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
@@ -29,12 +26,10 @@ const Login = () => {
 
     try {
       const res = await axios.post(
-        `${process.env.VERCEL_URL}/api/v1/user/login`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/user/login`,
         input,
         {
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           withCredentials: true,
         }
       );
@@ -63,20 +58,16 @@ const Login = () => {
     >
       <Toaster />
 
-      {/* Background Overlay */}
       <div className="absolute inset-0 bg-gradient-to-br from-gray-900/70 via-slate-900/60 to-gray-800/70 backdrop-blur-sm"></div>
 
-      {/* Animated Background */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-r from-emerald-500/10 to-teal-500/10 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
       </div>
 
-      {/* Login Form Container */}
       <div className="relative z-10 w-full max-w-md mx-4">
         <div className="bg-white/10 dark:bg-gray-900/20 backdrop-blur-2xl rounded-3xl border border-white/20 shadow-2xl p-8 transition-all duration-500 hover:shadow-3xl hover:bg-white/15">
           
-          {/* Branding */}
           <div className="text-center mb-8">
             <div className="flex justify-center items-center mb-4">
               <div className="relative">
@@ -97,7 +88,6 @@ const Login = () => {
             <p className="text-white/60 text-sm">Sign in to manage your finances with style</p>
           </div>
 
-          {/* Form */}
           <form onSubmit={submitHandler} className="space-y-6">
             <div className="space-y-2">
               <label htmlFor="email" className="block text-sm font-semibold text-white/90">
