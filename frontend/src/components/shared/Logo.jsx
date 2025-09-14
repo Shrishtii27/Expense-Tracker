@@ -1,19 +1,16 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React from 'react';
+import cashlyLogo from '/src/assets/cashly.png';
 
 const Logo = () => {
   return (
-    <Link to="/">
+    <div className="flex items-center justify-center">
       <img
-        src="./src/assets/logoo.png"
-        alt="logo"
-        style={{
-          width: "200px", // Adjust the width as needed
-          height: "64px", // Adjust the height as needed
-          objectFit: "contain", // Ensures the image is not distorted
-        }}
+        src={cashlyLogo}
+        alt="Cashly Logo"
+        className="h-24 w-auto object-contain bg-transparent"
+        style={{ background: "transparent" }}
       />
-    </Link>
+    </div>
   );
 };
 

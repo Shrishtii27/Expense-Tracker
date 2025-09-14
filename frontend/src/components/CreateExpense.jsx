@@ -21,8 +21,10 @@ const CreateExpense = () => {
     });
     const [loading, setLoading] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
-    const dispatch=useDispatch();
-    const {expense}=useSelector(store=>store.expense);
+
+    const dispatch = useDispatch();
+    const { expense } = useSelector(store => store.expense);
+    const { user } = useSelector(store => store.auth); // ✅ get token from auth slice
 
     const changeEventHandler = (e) => {
         const { name, value } = e.target;
@@ -42,13 +44,11 @@ const CreateExpense = () => {
     const submitHandler = async (e) => {
         e.preventDefault();
 
-        // Validate required fields
         if (!formData.description || !formData.amount || !formData.category) {
             toast.error("Please fill out all fields.");
             return;
         }
 
-        // Validate numeric amount
         if (isNaN(Number(formData.amount)) || Number(formData.amount) <= 0) {
             toast.error("Amount must be a valid positive number.");
             return;
@@ -57,30 +57,28 @@ const CreateExpense = () => {
         try {
             setLoading(true);
             const res = await axios.post(
-                `${process.env.VERCEL}/api/v1/expense/add`,
+                `${import.meta.env.VITE_BACKEND_URL}/api/v1/expense/add`, // ✅ use proper env
                 formData,
                 {
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${user?.token}`, // ✅ send token
                     },
-                    withCredentials: true
+                    withCredentials: true,
                 }
             );
 
             if (res.data.success) {
-                dispatch(setExpenses([...expense,res.data.expense]));
+                dispatch(setExpenses([...expense, res.data.expense]));
                 toast.success(res.data.message);
                 setIsOpen(false);
-                setFormData({
-                    description: "",
-                    amount: "",
-                    category: ""
-                });
+                setFormData({ description: "", amount: "", category: "" });
             } else {
                 toast.error(res.data.message || "Failed to add expense.");
             }
         } catch (error) {
-            const message = error.response?.data?.message || "An error occurred while adding the expense.";
+            const message =
+                error.response?.data?.message || "An error occurred while adding the expense.";
             console.error(error);
             toast.error(message);
         } finally {
@@ -91,7 +89,9 @@ const CreateExpense = () => {
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
-                <Button onClick={() => setIsOpen(true)} variant="outline">Add new Expense</Button>
+                <Button onClick={() => setIsOpen(true)} variant="outline">
+                    Add new Expense
+                </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
@@ -144,7 +144,11 @@ const CreateExpense = () => {
                         </Select>
                     </div>
                     <DialogFooter>
-                        <Button type="submit" className="w-full my-4 flex items-center justify-center" disabled={loading}>
+                        <Button
+                            type="submit"
+                            className="w-full my-4 flex items-center justify-center"
+                            disabled={loading}
+                        >
                             {loading ? (
                                 <>
                                     <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Loading...

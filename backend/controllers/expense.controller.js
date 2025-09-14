@@ -1,17 +1,16 @@
-// Import the Expense model
 import Expense from "../models/expense.model.js";
 
 export const addExpense = async (req, res) => {
     try {
         const { description, amount, category } = req.body;
-        const userId = req.id; // Current logged-in user ID
+        const userId = req.id;
 
         if (!description || !amount || !category) {
             return res.status(400).json({
                 message: "All fields are required.",
                 success: false
-            })
-        };
+            });
+        }
 
         const expense = await Expense.create({
             description,
@@ -36,30 +35,23 @@ export const addExpense = async (req, res) => {
 
 export const getAllExpense = async (req, res) => {
     try {
-        const userId = req.id; // Logged-in user ID
+        const userId = req.id;
         const category = req.query.category || "";
         const done = req.query.done || "";
 
-        const query = { userId }; // Filter by user ID
+        const query = { userId };
 
         if (category.toLowerCase() !== "all") {
-            query.category = { $regex: category, $options: "i" }; // Case-insensitive category filter
+            query.category = { $regex: category, $options: "i" };
         }
 
         if (done.toLowerCase() === "done") {
             query.done = true;
         } else if (done.toLowerCase() === "undone") {
-            query.done = false; // Filter for pending expenses
+            query.done = false;
         }
 
         const expenses = await Expense.find(query);
-
-        if (!expenses || expenses.length === 0) {
-            return res.status(404).json({
-                message: "No expenses found.",
-                success: false,
-            });
-        }
 
         return res.status(200).json({
             expenses,
@@ -142,13 +134,16 @@ export const updateExpense = async (req, res) => {
             new: true
         });
 
-
         return res.status(200).json({
             message: "Expense updated.",
             expense,
             success: true
-        })
+        });
     } catch (error) {
         console.error(error);
-        }
+        res.status(500).json({
+            message: "Server error while updating expense.",
+            success: false,
+        });
     }
+};
