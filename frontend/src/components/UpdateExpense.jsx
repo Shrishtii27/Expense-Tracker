@@ -96,7 +96,7 @@ const UpdateExpense = ({ expense: expenseProp }) => {
         <DialogHeader>
           <DialogTitle>Update Expense</DialogTitle>
           <DialogDescription>
-            Update expense details here. Click "Update" when you're done.
+            Update Expense here. Click &quot;Update&quot; when you&apos;re done.
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-4">

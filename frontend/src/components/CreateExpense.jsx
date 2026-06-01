@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
     Dialog,
     DialogContent,
@@ -31,7 +31,6 @@ const CreateExpense = () => {
     const { expense } = useSelector(store => store.expense);
     const { user } = useSelector(store => store.auth);
 
-    // Handle input changes
     const changeEventHandler = (e) => {
         const { name, value } = e.target;
         setFormData(prevData => ({ ...prevData, [name]: value }));
@@ -41,7 +40,6 @@ const CreateExpense = () => {
         setFormData(prevData => ({ ...prevData, category: value }));
     };
 
-    // Submit new expense
     const submitHandler = async (e) => {
         e.preventDefault();
 
@@ -98,7 +96,7 @@ const CreateExpense = () => {
                 <DialogHeader>
                     <DialogTitle>Add Expense</DialogTitle>
                     <DialogDescription>
-                        Create Expense here. Click "Add" when you're done.
+                        Create Expense here. Click &quot;Add&quot; when you&apos;re done.
                     </DialogDescription>
                 </DialogHeader>
 

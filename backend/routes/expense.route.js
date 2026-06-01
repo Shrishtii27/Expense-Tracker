@@ -10,7 +10,6 @@ import isAuthenticated from "../middleware/isAuthenticated.js";
 
 const router = express.Router();
 
-// ✅ All routes are protected
 router.route("/add").post(isAuthenticated, addExpense);
 router.route("/getall").get(isAuthenticated, getAllExpense);
 router.route("/remove/:id").delete(isAuthenticated, removeExpense);

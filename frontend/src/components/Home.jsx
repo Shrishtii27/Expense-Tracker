@@ -1,4 +1,3 @@
-import React from "react";
 import Navbar from "./Navbar";
 import CreateExpense from "./CreateExpense";
 import {
@@ -29,21 +28,21 @@ const Home = () => {
   };
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-slate-50 via-white to-gray-100 dark:from-gray-900 dark:via-slate-900 dark:to-gray-800 transition-all duration-500 text-gray-900 dark:text-gray-100 font-inter">
-      {/* Navbar */}
+    <div className="min-h-screen w-full bg-gradient-to-br from-slate-50 via-white to-gray-100 dark:from-gray-900 dark:via-slate-900 dark:to-gray-800 transition-all duration-500 text-gray-900 dark:text-gray-100">
+      
       <Navbar />
 
-      {/* Animated Background Elements */}
+      
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-r from-emerald-400/10 to-teal-400/10 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute bottom-20 right-10 w-96 h-96 bg-gradient-to-r from-blue-400/10 to-purple-400/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
       </div>
 
-      {/* Main Container */}
+      
       <div className="relative max-w-6xl mx-auto px-6 pt-24 pb-12 flex flex-col gap-8">
-        {/* Header Section */}
+        
         <div className="flex items-center justify-between animate-fadeInUp">
-          {/* Enhanced title with gradient */}
+          
           <div className="space-y-2">
             <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">
               <span className="bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 dark:from-emerald-400 dark:via-teal-400 dark:to-cyan-400 bg-clip-text text-transparent">
@@ -55,13 +54,13 @@ const Home = () => {
             </p>
           </div>
 
-          {/* Actions */}
+          
           <div className="flex gap-4">
             <CreateExpense />
           </div>
         </div>
 
-        {/* Enhanced Filter Section */}
+        
         <div className="group bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-3xl shadow-xl border border-gray-200/50 dark:border-gray-700/50 p-8 transition-all duration-300 hover:shadow-2xl hover:scale-[1.01] animate-fadeInUp delay-100">
           <div className="flex flex-wrap items-center gap-6">
             <div className="flex items-center gap-3">
@@ -103,13 +102,13 @@ const Home = () => {
           </div>
         </div>
 
-        {/* Enhanced Expense Table Container */}
+        
         <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-3xl shadow-xl border border-gray-200/50 dark:border-gray-700/50 p-8 transition-all duration-300 hover:shadow-2xl animate-fadeInUp delay-200">
           <ExpenseTable />
         </div>
       </div>
 
-      <style jsx>{`
+      <style>{`
         @keyframes fadeInUp {
           from {
             opacity: 0;

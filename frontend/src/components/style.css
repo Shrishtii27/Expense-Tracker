@@ -1,7 +1,4 @@
-/*
- * This class ensures the logo container has a transparent background.
- * It is used to override any default styling from parent components.
- */
+
 .transparent-bg {
   background-color: transparent !important;
 }

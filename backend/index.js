@@ -1,12 +1,12 @@
 import express, { urlencoded } from 'express';
 import cookieParser from 'cookie-parser';
 import dotenv from "dotenv";
+dotenv.config();
+
 import cors from "cors";
-import connectDB from './database/db.js';
+
 import userRoute from './routes/user.route.js';
 import expenseRoute from './routes/expense.route.js';
-
-dotenv.config();
 
 const app = express();
 
@@ -20,32 +20,20 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-let isConnected = false;
-const connectToDatabase = async () => {
-    if (!isConnected) {
-        await connectDB();
-        isConnected = true;
-    }
-};
+console.log('🚀 Express server started');
 
-connectToDatabase().then(() => {
-    console.log('🚀 Express server started');
+app.use("/api/v1/user", userRoute);
+app.use("/api/v1/expense", expenseRoute);
 
-    app.use("/api/v1/user", userRoute);
-    app.use("/api/v1/expense", expenseRoute);
-
-    app.use((err, req, res, next) => {
-        console.error(err.stack);
-        res.status(500).json({
-            success: false,
-            message: "Something went wrong!"
-        });
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).json({
+        success: false,
+        message: "Something went wrong!"
     });
+});
 
-    const PORT = process.env.PORT || 5000;
-    app.listen(PORT, () => {
-        console.log(`🌐 Server running at http://localhost:${PORT}`);
-    });
-}).catch(err => {
-    console.error('❌ Server failed:', err);
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+    console.log(`🌐 Server running at http://localhost:${PORT}`);
 });

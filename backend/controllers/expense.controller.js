@@ -1,9 +1,14 @@
-import Expense from "../models/expense.model.js";
+import { prisma } from "../database/prisma.js";
+
+const mapExpense = (expense) => ({
+    ...expense,
+    _id: expense.id
+});
 
 export const addExpense = async (req, res) => {
     try {
         const { description, amount, category } = req.body;
-        const userId = req.id;
+        const userId = req.userId; // Fixed bug from req.id
 
         if (!description || !amount || !category) {
             return res.status(400).json({
@@ -12,20 +17,22 @@ export const addExpense = async (req, res) => {
             });
         }
 
-        const expense = await Expense.create({
-            description,
-            amount,
-            category,
-            userId,
+        const expense = await prisma.expense.create({
+            data: {
+                description,
+                amount: parseFloat(amount),
+                category,
+                userId,
+            }
         });
 
         return res.status(201).json({
             message: "New expense added.",
-            expense,
+            expense: mapExpense(expense),
             success: true,
         });
     } catch (error) {
-        console.error(error);
+        console.error("Add Expense Error:", error);
         res.status(500).json({
             message: "Server error while adding expense.",
             success: false,
@@ -35,14 +42,14 @@ export const addExpense = async (req, res) => {
 
 export const getAllExpense = async (req, res) => {
     try {
-        const userId = req.id;
+        const userId = req.userId;
         const category = req.query.category || "";
         const done = req.query.done || "";
 
         const query = { userId };
 
-        if (category.toLowerCase() !== "all") {
-            query.category = { $regex: category, $options: "i" };
+        if (category.toLowerCase() !== "all" && category) {
+            query.category = { contains: category, mode: 'insensitive' };
         }
 
         if (done.toLowerCase() === "done") {
@@ -51,14 +58,17 @@ export const getAllExpense = async (req, res) => {
             query.done = false;
         }
 
-        const expenses = await Expense.find(query);
+        const expenses = await prisma.expense.findMany({
+            where: query,
+            orderBy: { createdAt: 'desc' }
+        });
 
         return res.status(200).json({
-            expenses,
+            expenses: expenses.map(mapExpense),
             success: true,
         });
     } catch (error) {
-        console.error(error);
+        console.error("Get Expenses Error:", error);
         res.status(500).json({
             message: "Server error while fetching expenses.",
             success: false,
@@ -71,25 +81,17 @@ export const markAsDoneUndone = async (req, res) => {
         const expenseId = req.params.id;
         const { done } = req.body;
 
-        const expense = await Expense.findByIdAndUpdate(
-            expenseId,
-            { done },
-            { new: true }
-        );
-
-        if (!expense) {
-            return res.status(404).json({
-                message: "Expense not found.",
-                success: false,
-            });
-        }
+        const expense = await prisma.expense.update({
+            where: { id: expenseId },
+            data: { done }
+        });
 
         return res.status(200).json({
             message: `Expense marked as ${expense.done ? "done" : "undone"}.`,
             success: true,
         });
     } catch (error) {
-        console.error(error);
+        console.error("Mark Done Error:", error);
         res.status(500).json({
             message: "Server error while updating expense status.",
             success: false,
@@ -101,21 +103,16 @@ export const removeExpense = async (req, res) => {
     try {
         const expenseId = req.params.id;
 
-        const expense = await Expense.findByIdAndDelete(expenseId);
-
-        if (!expense) {
-            return res.status(404).json({
-                message: "Expense not found.",
-                success: false,
-            });
-        }
+        await prisma.expense.delete({
+            where: { id: expenseId }
+        });
 
         return res.status(200).json({
             message: "Expense removed.",
             success: true,
         });
     } catch (error) {
-        console.error(error);
+        console.error("Remove Expense Error:", error);
         res.status(500).json({
             message: "Server error while removing expense.",
             success: false,
@@ -128,19 +125,22 @@ export const updateExpense = async (req, res) => {
         const { description, amount, category } = req.body;
         const expenseId = req.params.id;
 
-        const updateData = { description, amount, category };
-
-        const expense = await Expense.findByIdAndUpdate(expenseId, updateData, {
-            new: true
+        const expense = await prisma.expense.update({
+            where: { id: expenseId },
+            data: { 
+                description, 
+                amount: amount ? parseFloat(amount) : undefined, 
+                category 
+            }
         });
 
         return res.status(200).json({
             message: "Expense updated.",
-            expense,
+            expense: mapExpense(expense),
             success: true
         });
     } catch (error) {
-        console.error(error);
+        console.error("Update Expense Error:", error);
         res.status(500).json({
             message: "Server error while updating expense.",
             success: false,

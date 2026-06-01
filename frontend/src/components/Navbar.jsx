@@ -1,25 +1,28 @@
-import React from "react";
+
 import axios from "axios";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
 import { Avatar, AvatarImage } from "./ui/avatar";
 import { toast } from "sonner";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../redux/authSlice";
 import ThemeToggle from "./ThemeToggle";
 import { Sparkles, LogOut, User, Settings } from "lucide-react";
 
 const Navbar = () => {
   const { user } = useSelector((store) => store.auth);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const logoutHandler = async () => {
     try {
-      const res = await axios.get(`${process.env.VERCEL}/api/v1/user/logout`, {
+      const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/v1/user/logout`, {}, {
         withCredentials: true,
       });
 
       if (res.data.success) {
+        dispatch(logout());
         toast.success(res.data.message || "Logout successful!");
         navigate("/login");
       } else {
@@ -35,19 +38,19 @@ const Navbar = () => {
 
   return (
     <>
-      {/* Backdrop blur overlay */}
+      
       <div className="fixed top-0 left-0 w-full h-20 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-b border-gray-200/50 dark:border-gray-700/50 z-50 transition-all duration-300">
-        {/* Animated background elements */}
+        
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute top-0 left-1/4 w-96 h-20 bg-gradient-to-r from-emerald-500/5 to-teal-500/5 blur-2xl"></div>
           <div className="absolute top-0 right-1/4 w-96 h-20 bg-gradient-to-l from-blue-500/5 to-purple-500/5 blur-2xl"></div>
         </div>
         
         <div className="relative flex items-center justify-between max-w-7xl mx-auto h-20 px-6">
-          {/* Enhanced CASHLY Logo */}
-          <Link to="/" className="flex items-center group">
+          
+          <Link to="/dashboard" className="flex items-center group">
             <div className="flex items-center space-x-3 transition-all duration-300 group-hover:scale-105">
-              {/* Logo Icon */}
+              
               <div className="relative">
                 <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl shadow-lg flex items-center justify-center group-hover:shadow-xl transition-all duration-300 group-hover:rotate-6">
                   <Sparkles className="w-6 h-6 text-white" />
@@ -55,7 +58,7 @@ const Navbar = () => {
                 <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full animate-pulse"></div>
               </div>
               
-              {/* CASHLY Text */}
+              
               <div className="flex flex-col">
                 <h1 className="text-2xl font-extrabold tracking-tight">
                   <span className="bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 dark:from-emerald-400 dark:via-teal-400 dark:to-cyan-400 bg-clip-text text-transparent">
@@ -69,9 +72,9 @@ const Navbar = () => {
             </div>
           </Link>
 
-          {/* Right Side Navigation */}
+          
           <div className="flex items-center space-x-6">
-            {/* Theme Toggle with enhanced styling */}
+            
             <div className="transform transition-all duration-300 hover:scale-110">
               <ThemeToggle />
             </div>
@@ -171,7 +174,7 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Spacer to prevent content from being hidden behind fixed navbar */}
+      
       <div className="h-20"></div>
     </>
   );

@@ -2,19 +2,35 @@ import './App.css';
 import Home from './components/Home';
 import Login from './components/Login';
 import Signup from './components/Signup';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Toaster } from "@/components/ui/sonner";
 
-// Full Featured Inline Landing Page Component
+const ProtectedRoute = ({ children }) => {
+  const { user } = useSelector(store => store.auth);
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+  return children;
+};
+
+const PublicRoute = ({ children }) => {
+  const { user } = useSelector(store => store.auth);
+  if (user) {
+    return <Navigate to="/dashboard" replace />;
+  }
+  return children;
+};
+
 const FullLandingPage = () => (
   <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-gray-100">
-    {/* Navigation */}
+    
     <nav className="fixed w-full z-50 bg-white/90 backdrop-blur-xl shadow-lg border-b border-gray-200/50">
       <div className="max-w-7xl mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
-          {/* Logo - Matching other pages */}
+          
           <div className="flex items-center space-x-3">
             <div className="relative">
               <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl shadow-lg flex items-center justify-center transform hover:rotate-6 transition-transform duration-300">
@@ -30,7 +46,7 @@ const FullLandingPage = () => (
             </div>
           </div>
 
-          {/* Desktop Navigation */}
+          
           <div className="hidden md:flex items-center space-x-8">
             <a href="#features" className="text-gray-700 hover:text-emerald-600 transition-colors font-medium">Features</a>
             <a href="#testimonials" className="text-gray-700 hover:text-emerald-600 transition-colors font-medium">Reviews</a>
@@ -43,7 +59,7 @@ const FullLandingPage = () => (
             </Link>
           </div>
 
-          {/* Mobile Menu Button */}
+          
           <div className="md:hidden">
             <Link to="/signup" className="px-4 py-2 bg-emerald-600 text-white rounded-lg font-semibold">
               Sign Up
@@ -53,9 +69,9 @@ const FullLandingPage = () => (
       </div>
     </nav>
 
-    {/* Hero Section */}
+    
     <section className="relative pt-32 pb-20 overflow-hidden">
-      {/* Animated Background Elements */}
+      
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-r from-emerald-400/20 to-teal-400/20 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-gradient-to-r from-blue-400/20 to-purple-400/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
@@ -72,7 +88,7 @@ const FullLandingPage = () => (
           </h1>
           
           <p className="text-xl md:text-2xl text-gray-600 mb-12 leading-relaxed max-w-3xl mx-auto">
-            Take control of your finances with CASHLY's intelligent expense tracking, 
+            Take control of your finances with CASHLY&apos;s intelligent expense tracking, 
             beautiful analytics, and seamless user experience.
           </p>
 
@@ -86,7 +102,7 @@ const FullLandingPage = () => (
             </Link>
           </div>
 
-          {/* Stats */}
+          
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
             <div className="text-center">
               <div className="text-3xl md:text-4xl font-bold text-emerald-600 mb-2">50K+</div>
@@ -109,7 +125,7 @@ const FullLandingPage = () => (
       </div>
     </section>
 
-    {/* Features Section */}
+    
     <section id="features" className="py-20 bg-white/50 backdrop-blur-sm">
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
@@ -170,7 +186,7 @@ const FullLandingPage = () => (
             </div>
             <h3 className="text-2xl font-bold mb-4 text-gray-900">Budget Goals</h3>
             <p className="text-gray-600 leading-relaxed">
-              Set spending limits and get notifications when you're approaching your budget.
+              Set spending limits and get notifications when you&apos;re approaching your budget.
             </p>
           </div>
 
@@ -187,7 +203,7 @@ const FullLandingPage = () => (
       </div>
     </section>
 
-    {/* Testimonials Section */}
+    
     <section id="testimonials" className="py-20">
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
@@ -197,7 +213,7 @@ const FullLandingPage = () => (
             </span>
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Join thousands of satisfied users who've transformed their financial management with CASHLY.
+            Join thousands of satisfied users who&apos;ve transformed their financial management with CASHLY.
           </p>
         </div>
 
@@ -207,7 +223,7 @@ const FullLandingPage = () => (
               <span className="text-yellow-400">⭐⭐⭐⭐⭐</span>
             </div>
             <p className="text-gray-600 mb-6 leading-relaxed italic">
-              "CASHLY has transformed how I manage my business expenses. The insights are incredible!"
+              &quot;CASHLY has transformed how I manage my business expenses. The insights are incredible!&quot;
             </p>
             <div className="flex items-center">
               <div className="w-12 h-12 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full flex items-center justify-center text-white font-bold mr-4">
@@ -225,7 +241,7 @@ const FullLandingPage = () => (
               <span className="text-yellow-400">⭐⭐⭐⭐⭐</span>
             </div>
             <p className="text-gray-600 mb-6 leading-relaxed italic">
-              "Finally, an expense tracker that's both powerful and beautiful. I love the interface!"
+              &quot;Finally, an expense tracker that&apos;s both powerful and beautiful. I love the interface!&quot;
             </p>
             <div className="flex items-center">
               <div className="w-12 h-12 bg-gradient-to-r from-green-400 to-green-600 rounded-full flex items-center justify-center text-white font-bold mr-4">
@@ -243,7 +259,7 @@ const FullLandingPage = () => (
               <span className="text-yellow-400">⭐⭐⭐⭐⭐</span>
             </div>
             <p className="text-gray-600 mb-6 leading-relaxed italic">
-              "The analytics feature helped me identify spending patterns I never noticed before."
+              &quot;The analytics feature helped me identify spending patterns I never noticed before.&quot;
             </p>
             <div className="flex items-center">
               <div className="w-12 h-12 bg-gradient-to-r from-purple-400 to-purple-600 rounded-full flex items-center justify-center text-white font-bold mr-4">
@@ -259,14 +275,14 @@ const FullLandingPage = () => (
       </div>
     </section>
 
-    {/* CTA Section */}
+    
     <section className="py-20 bg-gradient-to-r from-emerald-600 to-teal-600 relative overflow-hidden">
       <div className="relative max-w-4xl mx-auto px-6 text-center text-white">
         <h2 className="text-4xl md:text-5xl font-bold mb-6">
           Ready to Transform Your Finances?
         </h2>
         <p className="text-xl mb-8 opacity-90 leading-relaxed">
-          Join thousands of users who've already taken control of their financial future with CASHLY.
+          Join thousands of users who&apos;ve already taken control of their financial future with CASHLY.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link to="/signup" className="px-8 py-4 bg-white text-emerald-600 text-lg font-bold rounded-2xl hover:bg-gray-100 transition-all transform hover:scale-105 shadow-2xl">
@@ -282,7 +298,7 @@ const FullLandingPage = () => (
       </div>
     </section>
 
-    {/* Footer */}
+    
     <footer className="py-12 bg-gray-900 text-white">
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex flex-col md:flex-row items-center justify-between">
@@ -307,19 +323,35 @@ const FullLandingPage = () => (
 const appRouter = createBrowserRouter([
   {
     path: "/",
-    element: <FullLandingPage />
+    element: (
+      <PublicRoute>
+        <FullLandingPage />
+      </PublicRoute>
+    )
   },
   {
     path: "/dashboard",
-    element: <Home />
+    element: (
+      <ProtectedRoute>
+        <Home />
+      </ProtectedRoute>
+    )
   },
   {
     path: "/login", 
-    element: <Login />
+    element: (
+      <PublicRoute>
+        <Login />
+      </PublicRoute>
+    )
   },
   {
     path: "/signup",
-    element: <Signup />
+    element: (
+      <PublicRoute>
+        <Signup />
+      </PublicRoute>
+    )
   }
 ]);
 

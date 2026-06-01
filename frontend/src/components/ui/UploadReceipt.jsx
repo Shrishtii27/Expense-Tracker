@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Tesseract from "tesseract.js";
 
 const UploadReceipt = ({ onTextExtracted }) => {
@@ -15,7 +15,6 @@ const UploadReceipt = ({ onTextExtracted }) => {
         const formData = new FormData();
         formData.append("receipt", image);
 
-        // Upload image to backend
         const response = await fetch("http://localhost:5000/api/uploads/upload-receipt", {
             method: "POST",
             body: formData,
@@ -23,7 +22,7 @@ const UploadReceipt = ({ onTextExtracted }) => {
 
         const data = await response.json();
         if (data.filePath) {
-            // Convert image to text using Tesseract.js
+
             Tesseract.recognize(
                 data.filePath,
                 "eng",

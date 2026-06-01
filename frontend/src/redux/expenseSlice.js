@@ -9,7 +9,7 @@ const expenseSlice = createSlice({
         singleExpense:null
     },
     reducers: {
-        // Actions
+
         setCategory: (state, action) => {
             state.category = action.payload;
         },
@@ -25,7 +25,6 @@ const expenseSlice = createSlice({
     },
 });
 
-// Export actions for dispatching
 export const {
     setCategory,
     setMarkAsDone,
@@ -33,5 +32,4 @@ export const {
     setSingleExpense
 } = expenseSlice.actions;
 
-// Export the reducer to integrate into the store
 export default expenseSlice.reducer;

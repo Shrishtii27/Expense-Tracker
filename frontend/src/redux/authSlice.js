@@ -12,9 +12,7 @@ const authSlice = createSlice({
             state.loading = action.payload;
         },
         setAuthUser: (state, action) => {
-            // ✅ expecting payload like: { user: {...}, token: "xxx" }
-            state.user = action.payload.user;
-            state.token = action.payload.token;
+            state.user = action.payload;
         },
         logout: (state) => {
             state.user = null;

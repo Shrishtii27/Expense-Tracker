@@ -1,6 +1,6 @@
-import { user } from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { prisma } from "../database/prisma.js";
 
 export const register = async (req, res) => {
     try {
@@ -13,7 +13,7 @@ export const register = async (req, res) => {
             });
         }
 
-        const existingUser = await user.findOne({ email });
+        const existingUser = await prisma.user.findUnique({ where: { email } });
         if (existingUser) {
             return res.status(400).json({
                 message: "User already exists with this email.",
@@ -23,13 +23,13 @@ export const register = async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        const newUser = new user({
-            fullname,
-            email,
-            password: hashedPassword
+        await prisma.user.create({
+            data: {
+                fullname,
+                email,
+                password: hashedPassword
+            }
         });
-
-        await newUser.save();
 
         return res.status(201).json({
             message: "Account created successfully",
@@ -55,7 +55,7 @@ export const login = async (req, res) => {
             });
         }
 
-        const foundUser = await user.findOne({ email });
+        const foundUser = await prisma.user.findUnique({ where: { email } });
         if (!foundUser) {
             return res.status(400).json({
                 message: "Incorrect email or password.",
@@ -71,7 +71,7 @@ export const login = async (req, res) => {
             });
         }
 
-        const token = jwt.sign({ userId: foundUser._id }, process.env.SECRET_KEY, { expiresIn: '1d' });
+        const token = jwt.sign({ userId: foundUser.id }, process.env.SECRET_KEY, { expiresIn: '1d' });
 
         return res
             .status(200)
@@ -84,7 +84,7 @@ export const login = async (req, res) => {
             .json({
                 message: `Welcome back, ${foundUser.fullname}`,
                 user: {
-                    _id: foundUser._id,
+                    _id: foundUser.id,
                     fullname: foundUser.fullname,
                     email: foundUser.email
                 },
