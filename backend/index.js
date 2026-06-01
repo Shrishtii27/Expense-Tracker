@@ -25,6 +25,15 @@ console.log('🚀 Express server started');
 app.use("/api/v1/user", userRoute);
 app.use("/api/v1/expense", expenseRoute);
 
+// Root route for API status
+app.get("/", (req, res) => {
+    res.status(200).json({
+        success: true,
+        message: "CASHLY API is running successfully! 🚀",
+        version: "1.0.0"
+    });
+});
+
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).json({
