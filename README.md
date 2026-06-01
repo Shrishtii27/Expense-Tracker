@@ -22,6 +22,6 @@ Frontend: HTML, CSS, JavaScript, React
 
 Backend: Node.js, Express
 
-Database: MongoDB
-
+Database: Postgres
 Libraries: Mongoose, Chart.js
+Deployement : Vercel , SupaBase
