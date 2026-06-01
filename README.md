@@ -1,4 +1,4 @@
-# 💰 Expense Tracker
+# 💰 Cashly
 
 <div align="center">
 
